@@ -25,7 +25,7 @@ from lbuild.logger import CallCounter
 
 class Builder:
 
-    def __init__(self, cwd=None, config=None, options=None, collectors=None):
+    def __init__(self, cwd=None, config=None, options=None, collectors=None, outpath=None):
         """
         Build instance to invoke lbuild methods.
 
@@ -77,6 +77,14 @@ class Builder:
         self.config.add_commandline_collectors(listify(collectors))
         self.parser = Parser(self.config)
 
+        self.outpath = outpath
+        # set special lbuild options from other sources
+        # special xml options:
+        special_outpath = self.config.options.get("lbuild:path", (None, None))[0]
+        if special_outpath:
+            self.outpath = special_outpath.strip()
+            del self.config.options["lbuild:path"]
+
     def _load_repositories(self, repos=None):
         self.parser.load_repositories(listrify(repos))
         self.parser.merge_repository_options()
@@ -123,7 +131,7 @@ class Builder:
         self.parser.validate_modules(build_modules, complete)
         return (build_modules, CallCounter.levels)
 
-    def build(self, outpath, modules=None, simulate=False, use_symlinks=False):
+    def build(self, modules=None, simulate=False, use_symlinks=False):
         """
         Build the given set of modules.
 
@@ -136,7 +144,7 @@ class Builder:
                 that case no output will be generated.
         """
         build_modules = self._filter_modules(modules)
-        buildlog = BuildLog(outpath)
+        buildlog = BuildLog(project_path=self.cwd, outpath=self.outpath)
         lbuild.environment.SYMLINK_ON_COPY = use_symlinks
         self.parser.build_modules(build_modules, buildlog, simulate=simulate)
         return buildlog

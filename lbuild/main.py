@@ -316,7 +316,7 @@ class BuildAction(ManipulationActionBase):
 
     @staticmethod
     def perform(args, builder):
-        buildlog = builder.build(args.path, args.modules, simulate=args.simulate,
+        buildlog = builder.build(args.modules, simulate=args.simulate,
                                  use_symlinks=args.symlink)
 
         if args.simulate:
@@ -518,7 +518,7 @@ def run(args):
     except AttributeError:
         raise lbuild.exception.LbuildArgumentException("No command specified!")
 
-    builder = Builder(config=args.config, options=args.options, collectors=args.collectors)
+    builder = Builder(config=args.config, options=args.options, collectors=args.collectors, outpath=args.path)
     return command(args, builder)
 
 

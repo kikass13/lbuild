@@ -77,9 +77,10 @@ class BuildLog:
     a specific file.
     """
 
-    def __init__(self, outpath=None):
+    def __init__(self, project_path=None, outpath=None):
         self._operations = collections.defaultdict(list)
         self._metadata = collections.defaultdict(lambda: collections.defaultdict(set))
+        self.project_path = os.getcwd() if project_path is None else abspath(project_path)
         self.outpath = os.getcwd() if outpath is None else abspath(outpath)
 
         self._build_files = {}
