@@ -77,13 +77,7 @@ class Builder:
         self.config.add_commandline_collectors(listify(collectors))
         self.parser = Parser(self.config)
 
-        self.outpath = outpath
-        # set special lbuild options from other sources
-        # special xml options:
-        special_outpath = self.config.options.get("lbuild:path", (None, None))[0]
-        if special_outpath:
-            self.outpath = special_outpath.strip()
-            del self.config.options["lbuild:path"]
+        self.outpath = self.config._outpath if self.config._outpath else outpath
 
     def _load_repositories(self, repos=None):
         self.parser.load_repositories(listrify(repos))
@@ -144,7 +138,7 @@ class Builder:
                 that case no output will be generated.
         """
         build_modules = self._filter_modules(modules)
-        buildlog = BuildLog(project_path=self.cwd, outpath=self.outpath)
+        buildlog = BuildLog(cwdpath=self.cwd, outpath=self.outpath)
         lbuild.environment.SYMLINK_ON_COPY = use_symlinks
         self.parser.build_modules(build_modules, buildlog, simulate=simulate)
         return buildlog

@@ -95,7 +95,7 @@ class Environment:
         self.__modulepath = module._filepath
         self.__repopath = module.repository._filepath
         self.__outpath = buildlog.outpath if buildlog else None
-        self.__project_path = buildlog.project_path if buildlog else None
+        self.__cwdpath = buildlog.cwdpath if buildlog else None
 
         self.buildlog = buildlog
         self.__template_environment = None
@@ -324,18 +324,18 @@ class Environment:
 
         return os.path.join(self.__outpath, basepath, *path)
 
-    def projectpath(self, *path):
-        """Relocate given path to the path, where the project invocation happened"""
-        return os.path.join(self.__project_path, *path)
+    def cwdpath(self, *path):
+        """Relocate given path to the path, where the lbuild invocation happened"""
+        return os.path.join(self.__cwdpath, *path)
 
-    def projectoutpath(self, *path):
-        """ Relocate given path to the outpath in respect to where the project invocation happened"""
+    def cwdoutpath(self, *path):
+        """ Relocate given path to the outpath in respect to where the lbuild invocation happened"""
         return self.outpath("", basepath="")
     
-    def relprojectoutpath(self, *path):
-        """ Relocate given path to the outpath in respect to where the project invocation happened"""
-        relative = self.projectpath("")
-        path = os.path.join(self.projectoutpath(""), *path)
+    def relcwdoutpath(self, *path):
+        """ Relocate given path to the outpath in respect to where the lbuild invocation happened"""
+        relative = self.cwdpath("")
+        path = os.path.join(self.cwdoutpath(""), *path)
         return os.path.relpath(os.path.abspath(path), os.path.abspath(relative))
 
     def reloutpath(self, path, relative=None):

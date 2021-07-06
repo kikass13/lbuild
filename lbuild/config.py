@@ -39,6 +39,7 @@ class ConfigNode(anytree.AnyNode):
         self._modules = []
         self._options = {}
         self._collectors = []
+        self._outpath = None 
 
         self.filename = Path()
 
@@ -218,6 +219,10 @@ class ConfigNode(anytree.AnyNode):
         # Load all requested modules
         config._modules = xmltree.xpath('modules/module/text()')
 
+        # Load output path for lbuild and modules
+        outPaths = xmltree.xpath('outpath/text()')
+        config._outpath = outPaths[0] if outPaths else None 
+        
         # Load options
         for option_node in xmltree.xpath('options/option'):
             name = option_node.attrib['name']
