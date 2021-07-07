@@ -220,9 +220,10 @@ class ConfigNode(anytree.AnyNode):
         config._modules = xmltree.xpath('modules/module/text()')
 
         # Load output path for lbuild and modules
-        outPaths = xmltree.xpath('outpath/text()')
-        config._outpath = outPaths[0] if outPaths else None 
-        
+        out_path = xmltree.find("outpath")
+        if out_path is not None:
+            config._outpath = ConfigNode._rel_path(out_path.text, configpath)
+
         # Load options
         for option_node in xmltree.xpath('options/option'):
             name = option_node.attrib['name']
