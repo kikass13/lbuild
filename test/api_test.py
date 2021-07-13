@@ -50,7 +50,12 @@ class ApiTest(unittest.TestCase):
 
         api = lbuild.api.Builder(config="project.xml")
         self._assert_config(api)
-
+    
+    def test_project_builder_outpath(self):
+        outputPath = "testpath"
+        api = lbuild.api.Builder(cwd=self._get_path("parser/api"), config="project.xml", outpath=outputPath)
+        self.assertEqual(api.outpath, outputPath)
+        
     def test_config_builder(self):
         api = lbuild.api.Builder(config=self._get_path("parser/api/simple.xml"))
         self.assertEqual(api.cwd, self._get_path("parser/api"))

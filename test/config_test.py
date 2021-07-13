@@ -104,6 +104,9 @@ class ConfigTest(unittest.TestCase):
         self.assertEqual(config.collectors[2][0], 'repo1:collect_empty')
         self.assertEqual(config.collectors[2][1], '')
 
+        self.assertIsNone(config._outpath)
+
+
     def test_should_parse_base_configuration(self):
         config = self._parse_config("configfile_inheritance/depth_0.xml")
         self.assertEqual(self._get_path("configfile_inheritance/.lbuild_cache"), abspath(config.cachefolder))
